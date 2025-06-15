@@ -28,23 +28,72 @@
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             text-align: left;
-            min-width: 300px; /* 최소 너비 설정 */
-            max-width: 90%; /* 반응형 최대 너비 */
-            overflow-x: auto; /* 내용이 길어질 경우 스크롤바 */
-            position: relative; /* 커서 깜빡임을 위한 위치 설정 */
+            min-width: 300px;
+            max-width: 90%;
+            height: 200px; /* 고정 높이 설정 */
+            overflow-y: auto; /* 내용이 넘치면 스크롤 */
+            overflow-x: hidden; /* 가로 스크롤 방지 */
+            position: relative;
+            margin-bottom: 30px; /* 키보드와의 간격 */
+            line-height: 1.6;
+            cursor: text; /* 텍스트 입력 가능함을 시각적으로 표시 */
         }
         #typewriter {
-            font-family: 'Courier New', monospace; /* 타자기 느낌 폰트 */
+            font-family: 'Courier New', monospace;
             font-size: 1.5em;
             white-space: pre-wrap; /* 줄 바꿈 허용 */
             overflow-wrap: break-word; /* 긴 단어도 줄 바꿈 */
-            border-right: 2px solid black;
-            padding-right: 5px; /* 커서와 텍스트 간격 */
-            animation: blink 0.7s infinite;
+            min-height: 100%; /* 컨테이너 높이 채우기 */
+            box-sizing: border-box; /* 패딩 포함 높이 계산 */
+            padding-right: 5px; /* 커서 공간 확보 */
+            border-right: 2px solid black; /* 커서 */
+            animation: blink 0.7s infinite; /* 커서 깜빡임 */
         }
         @keyframes blink {
             0%, 100% { border-color: black; }
             50% { border-color: transparent; }
+        }
+
+        /* 가상 키보드 스타일 */
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); /* 키 크기 자동 조절 */
+            gap: 8px; /* 키 간격 */
+            justify-content: center;
+            margin-top: 20px;
+            max-width: 800px; /* 키보드 최대 너비 */
+            width: 100%;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .key {
+            padding: 12px 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.15s ease, transform 0.05s ease; /* 전환 시간 증가 */
+            user-select: none; /* 텍스트 선택 방지 */
+            min-width: 40px; /* 최소 너비 */
+            background-color: #ecf0f1; /* 기본 키 색상 */
+        }
+        .key:hover {
+            background-color: #dbe4e6;
+        }
+        .key.active {
+            background-color: #ffe082 !important; /* 활성화 시 노란색 */
+            transform: translateY(1px);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .space-key {
+            grid-column: span 4; /* 스페이스바는 넓게 */
+            background-color: #bdc3c7;
         }
         .back-button {
             margin-top: 30px;
@@ -57,23 +106,38 @@
             font-size: 1.1em;
             transition: background-color 0.3s ease, transform 0.2s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-decoration: none; /* <a> 태그 스타일 */
+            text-decoration: none;
         }
         .back-button:hover {
             background-color: #2c3e50;
             transform: translateY(-2px);
         }
 
-        /* 미디어 쿼리: 모바일 최적화 */
-        @media (max-width: 600px) {
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
             h1 {
                 font-size: 1.8em;
             }
             #typewriter-container {
                 padding: 20px;
+                height: 150px;
+                font-size: 1.2em;
             }
             #typewriter {
                 font-size: 1.2em;
+            }
+            .keyboard {
+                grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+                gap: 5px;
+                padding: 10px;
+            }
+            .key {
+                padding: 8px 3px;
+                font-size: 0.9em;
+                min-width: 30px;
+            }
+            .space-key {
+                grid-column: span 3; /* 모바일에서 스페이스바 너비 조정 */
             }
             .back-button {
                 padding: 8px 20px;
@@ -83,34 +147,134 @@
     </style>
 </head>
 <body>
-    <h1>영문 타자기 시뮬레이션</h1>
+    <h1>영문 타자기</h1>
     <div id="typewriter-container">
-        <div id="typewriter"></div>
+        <div id="typewriter">여기에 영어를 입력하세요...</div>
     </div>
+
+    <!-- 가상 키보드 -->
+    <div class="keyboard" id="keyboard"></div>
+
     <a href="index.html" class="back-button">홈으로 돌아가기</a>
 
     <script>
-        const text = "Hello, this is a simple English typewriter effect!\n\n" +
-                     "It simulates typing out text character by character.\n" +
-                     "You can use this for displaying dynamic messages or introductions.\n\n" +
-                     "Enjoy your project!";
-        let i = 0;
         const typewriterElement = document.getElementById("typewriter");
+        const keyboardElement = document.getElementById("keyboard");
+        let isFirstInput = true; // 첫 입력 여부를 확인하는 플래그
 
-        function type() {
-            if (i < text.length) {
-                typewriterElement.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(type, 80); // 타이핑 속도 조절
-            } else {
-                // 타이핑 완료 후 커서 깜빡임 유지
-                typewriterElement.style.borderRight = "2px solid black";
-                typewriterElement.style.animation = "blink 0.7s infinite";
-            }
+        // 가상 키보드 레이아웃 정의 (간소화된 QWERTY)
+        // Backspace, Enter, Spacebar는 기능적으로 필요하므로 포함
+        const keyLayout = [
+            ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
+            ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
+            ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 'Enter'],
+            ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'],
+            [' '] // Spacebar
+        ];
+
+        // 특수 키 표시 텍스트 매핑 (단축키 이름 간소화)
+        const specialKeyDisplay = {
+            'Backspace': '← Back',
+            'Enter': 'Enter',
+            ' ': 'Space'
+        };
+
+        // 가상 키보드 렌더링 함수
+        function renderKeyboard() {
+            keyboardElement.innerHTML = ''; // 기존 키보드 초기화
+
+            keyLayout.forEach(row => {
+                row.forEach(keyChar => {
+                    const keyDiv = document.createElement('div');
+                    keyDiv.classList.add('key');
+
+                    // 특수 키 처리 (Backspace, Enter, Space)
+                    if (specialKeyDisplay[keyChar]) {
+                        keyDiv.textContent = specialKeyDisplay[keyChar];
+                        if (keyChar === ' ') {
+                            keyDiv.classList.add('space-key');
+                        }
+                    } else {
+                        keyDiv.textContent = keyChar.toUpperCase(); // 알파벳은 대문자로 표시
+                    }
+
+                    // 키에 data-key 속성 추가 (실제 키보드 이벤트와 매칭 위함)
+                    // 실제 키 입력 시 e.key 값과 일치하도록 소문자 사용
+                    keyDiv.dataset.key = keyChar.toLowerCase();
+
+                    keyboardElement.appendChild(keyDiv);
+                });
+            });
         }
 
-        // 페이지 로드 후 바로 타이핑 시작
-        document.addEventListener('DOMContentLoaded', type);
+        // 실제 키보드 입력 처리
+        document.addEventListener('keydown', (e) => {
+            const key = e.key;
+            const code = e.code; // KeyCode 대신 Code 사용
+
+            // 첫 입력 시 초기 안내 문구 제거
+            // isComposing은 한글 입력기 등에서 조합 중일 때 true가 됨. 영문 타자기이므로 조합 중에는 무시.
+            if (isFirstInput && key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && !e.isComposing) {
+                typewriterElement.textContent = '';
+                isFirstInput = false;
+            }
+
+            // 가상 키보드에서 해당 키 찾기 및 활성화
+            let targetKeyDiv = null;
+            // Ctrl, Alt, Meta (Windows/Command) 키는 동작에 영향을 주므로 무시 (e.key.length === 1 조건에서 걸러짐)
+            // Shift 키도 가상 키보드에 별도 표시하지 않으므로 무시
+            if (key === 'Backspace' || key === 'Enter' || key === ' ') {
+                targetKeyDiv = keyboardElement.querySelector(`[data-key="${key.toLowerCase()}"]`);
+            } else if (key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && !e.isComposing) {
+                // 일반 문자 (알파벳, 숫자, 기호)
+                targetKeyDiv = keyboardElement.querySelector(`[data-key="${key.toLowerCase()}"]`);
+            }
+
+
+            if (targetKeyDiv) {
+                targetKeyDiv.classList.add('active');
+            }
+
+            // 키 입력에 따라 텍스트 업데이트
+            if (key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && !e.isComposing) {
+                typewriterElement.textContent += key;
+            } else if (key === 'Backspace') {
+                typewriterElement.textContent = typewriterElement.textContent.slice(0, -1);
+            } else if (key === 'Enter') {
+                typewriterElement.textContent += '\n';
+            } else if (key === 'Tab') {
+                e.preventDefault(); // 브라우저 기본 탭 이동 동작 방지
+                typewriterElement.textContent += '    '; // 탭 대신 4칸 공백 추가
+            }
+            // 스크롤을 항상 최하단으로 유지
+            typewriterElement.scrollTop = typewriterElement.scrollHeight;
+        });
+
+        // 키를 뗀 후 비활성화
+        document.addEventListener('keyup', (e) => {
+            const key = e.key;
+            const code = e.code;
+
+            let targetKeyDiv = null;
+            if (key === 'Backspace' || key === 'Enter' || key === ' ') {
+                targetKeyDiv = keyboardElement.querySelector(`[data-key="${key.toLowerCase()}"]`);
+            } else if (key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && !e.isComposing) {
+                targetKeyDiv = keyboardElement.querySelector(`[data-key="${key.toLowerCase()}"]`);
+            }
+
+            if (targetKeyDiv) {
+                // transition 시간보다 길게 유지하여 시각적으로 더 잘 보이도록 setTimeout 제거
+                targetKeyDiv.classList.remove('active');
+            }
+        });
+
+        // 페이지 로드 시 키보드 렌더링 및 포커스 설정
+        document.addEventListener('DOMContentLoaded', () => {
+            renderKeyboard();
+            // #typewriter 요소가 키 이벤트를 직접 받을 필요는 없지만,
+            // 텍스트를 입력하는 곳임을 시각적으로 나타내기 위해 focus 설정 (필요시)
+            // typewriterElement.focus();
+        });
     </script>
 </body>
 </html>
