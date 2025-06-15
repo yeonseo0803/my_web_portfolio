@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>전화기</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    main {
+      text-align: center;
+      padding: 20px;
+    }
+
+    #display {
+      width: 200px;
+      height: 40px;
+      margin: 10px auto;
+      border: 1px solid #aaa;
+      line-height: 40px;
+      font-size: 18px;
+      background-color: #f9f9f9;
+    }
+
+    .pad {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .pad button {
+      width: 60px;
+      height: 60px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">홈</a></li>
+        <li><a href="english.html">영문 타자기</a></li>
+        <li><a href="korean.html">한글 타자기</a></li>
+        <li><a href="calculator.html">계산기</a></li>
+        <li><a href="phone.html">전화기</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>전화기</h1>
+    <h3>전화번호 눌러지는 화면</h3>
+    <div id="display"></div>
+
+    <div class="pad">
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button onclick="press('*')">*</button>
+      <button onclick="press('0')">0</button>
+      <button onclick="press('#')">#</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>2025 나의 웹 포트폴리오</p>
+  </footer>
+
+  <script>
+    let input = "";
+
+    function press(key) {
+      if ((/[0-9]/.test(key) && input.replace(/-/g, '').length < 11) || key === "*" || key === "#") {
+        input += key;
+        document.getElementById("display").textContent = format(input);
+      }
+    }
+
+    function format(str) {
+      const digits = str.replace(/[^0-9]/g, '');
+      if (digits.length <= 3) return digits;
+      if (digits.length <= 7) return digits.slice(0, 3) + '-' + digits.slice(3);
+      if (digits.length <= 11) return digits.slice(0, 3) + '-' + digits.slice(3, 7) + '-' + digits.slice(7);
+      return str;
+    }
+  </script>
+</body>
+
+</html>

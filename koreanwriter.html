@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>한글 타자기</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .info {
+      margin-bottom: 20px;
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(10, 50px);
+      gap: 5px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .key {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: default;
+    }
+
+    .number {
+      background-color: #f9c74f;
+    }
+
+    .row1 {
+      background-color: #90be6d;
+    }
+
+    .row2 {
+      background-color: #577590;
+    }
+
+    .row3 {
+      background-color: #f94144;
+    }
+
+    .label-display {
+      margin-top: 20px;
+      font-size: 24px;
+      border: 1px solid gray;
+      padding: 10px;
+      width: 400px;
+      height: 40px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+
+    .active {
+      background-color: yellow !important;
+      transition: background-color 0.3s ease;
+    }
+
+    .mode {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">홈</a></li>
+        <li><a href="english.html">영문 타자기</a></li>
+        <li><a href="korean.html">한글 타자기</a></li>
+        <li><a href="calculator.html">계산기</a></li>
+        <li><a href="phone.html">전화기</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>한글 타자기</h1>
+    <div class="info">
+      <p>이름: 최연서</p>
+      <p>학번: 2402211</p>
+      <p>소속: 한양여자대학교 빅데이터학과</p>
+    </div>
+    <div class="mode" id="modeDisplay">현재 모드: 영어</div>
+    <div class="keyboard" id="keyboard"></div>
+    <label class="label-display" id="displayLabel"></label>
+  </main>
+
+  <footer>
+    <p>2025 나의 웹 포트폴리오</p>
+  </footer>
+
+  <script>
+    const keyboard = document.getElementById('keyboard');
+    const displayLabel = document.getElementById('displayLabel');
+    const modeDisplay = document.getElementById('modeDisplay');
+    let isKorean = false;
+    let buffer = [];
+    const engKeys = [
+      { chars: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'], cls: 'number' },
+      { chars: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], cls: 'row1' },
+      { chars: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], cls: 'row2' },
+      { chars: ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.'], cls: 'row3' },
+    ];
+    const korMap = {
+      r: 'ㄱ', s: 'ㄴ', e: 'ㄷ', f: 'ㄹ', a: 'ㅁ', q: 'ㅂ', t: 'ㅅ', d: 'ㅇ', w: 'ㅈ', c: 'ㅊ', z: 'ㅋ', x: 'ㅌ',
+      v: 'ㅍ', g: 'ㅎ',
+      k: 'ㅏ', o: 'ㅐ', i: 'ㅑ', j: 'ㅓ', p: 'ㅔ', u: 'ㅕ', h: 'ㅗ', y: 'ㅛ', n: 'ㅜ', b: 'ㅠ', m: 'ㅡ', l: 'ㅣ'
+    };
+    function renderKeyboard() {
+      keyboard.innerHTML = '';
+      engKeys.forEach(row => {
+        row.chars.forEach(char => {
+          const key = document.createElement('div');
+          key.className = `key ${row.cls}`;
+          key.textContent = isKorean && korMap[char] ? korMap[char] : char;
+          keyboard.appendChild(key);
+        });
+      });
+    }
+    function composeHangul(buffer) {
+      const onset = {
+        'ㄱ': 0, 'ㄲ': 1, 'ㄴ': 2, 'ㄷ': 3, 'ㄸ': 4, 'ㄹ': 5, 'ㅁ': 6, 'ㅂ': 7, 'ㅃ': 8, 'ㅅ': 9, 'ㅆ': 10,
+        'ㅇ': 11, 'ㅈ': 12, 'ㅉ': 13, 'ㅊ': 14, 'ㅋ': 15, 'ㅌ': 16, 'ㅍ': 17, 'ㅎ': 18
+      };
+      const nucleus = {
+        'ㅏ': 0, 'ㅐ': 1, 'ㅑ': 2, 'ㅒ': 3, 'ㅓ': 4, 'ㅔ': 5, 'ㅕ': 6, 'ㅖ': 7,
+        'ㅗ': 8, 'ㅛ': 9, 'ㅜ': 10, 'ㅠ': 11, 'ㅡ': 12, 'ㅣ': 13
+      };
+      if (buffer.length === 2 && onset[buffer[0]] !== undefined && nucleus[buffer[1]] !== undefined) {
+        const code = 0xAC00 + (onset[buffer[0]] * 21 + nucleus[buffer[1]]) * 28;
+        return String.fromCharCode(code);
+      }
+      return buffer.join('');
+    }
+    document.addEventListener('keydown', (e) => {
+      let key = e.key.toLowerCase();
+      if (key === 'hangulmode' || key === '.') {
+        isKorean = !isKorean;
+        modeDisplay.textContent = `현재 모드: ${isKorean ? '한글' : '영어'}`;
+        renderKeyboard();
+        buffer = [];
+        return;
+      }
+      const keys = document.querySelectorAll('.key');
+      keys.forEach(k => {
+        if (k.textContent === key || k.textContent === korMap[key]) {
+          k.classList.add('active');
+          setTimeout(() => k.classList.remove('active'), 100);
+        }
+      });
+      if (!isKorean) {
+        if (key.length === 1) displayLabel.textContent += key;
+      } else {
+        if (korMap[key]) {
+          buffer.push(korMap[key]);
+          if (buffer.length === 2) {
+            displayLabel.textContent += composeHangul(buffer);
+            buffer = [];
+          }
+        }
+      }
+    });
+    renderKeyboard();
+  </script>
+</body>
+</html>

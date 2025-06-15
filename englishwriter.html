@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>영문 타자기</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    #typewriter {
+      font-family: monospace;
+      white-space: pre;
+      border-right: 2px solid black;
+      width: fit-content;
+      animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% {
+        border-color: black;
+      }
+      50% {
+        border-color: transparent;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">홈</a></li>
+        <li><a href="english.html">영문 타자기</a></li>
+        <li><a href="korean.html">한글 타자기</a></li>
+        <li><a href="calculator.html">계산기</a></li>
+        <li><a href="phone.html">전화기</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>영문 타자기</h1>
+    <div id="typewriter"></div>
+  </main>
+
+  <footer>
+    <p>2025 나의 웹 포트폴리오</p>
+  </footer>
+
+  <script>
+    const text = "Typing effect using JavaScript...";
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        document.getElementById("typewriter").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(type, 150);
+      }
+    }
+    type();
+  </script>
+</body>
+
+</html>
