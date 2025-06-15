@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전화기</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to bottom, #d1f0f0 0%, #a2d9db 100%); /* 부드러운 그라디언트 */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            color: #333;
+        }
+        h1 {
+            color: #00796b; /* 어두운 청록색 */
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        #display-container {
+            background-color: white;
+            border-radius: 15px; /* 더 둥근 모서리 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            padding: 15px;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 300px;
+            box-sizing: border-box;
+        }
+        #display {
+            width: 100%;
+            height: 50px; /* 높이 증가 */
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            line-height: 50px; /* 수직 정렬 */
+            font-size: 22px; /* 폰트 크기 증가 */
+            background-color: #f5f5f5;
+            color: #333;
+            text-align: center;
+            overflow: hidden; /* 넘치는 텍스트 숨김 */
+            white-space: nowrap; /* 한 줄에 표시 */
+        }
+        .pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3열 그리드 */
+            gap: 15px; /* 간격 증가 */
+            max-width: 300px; /* 패드 최대 너비 */
+            width: 100%;
+            padding: 15px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        button {
+            width: 100%; /* 부모 너비에 맞춤 */
+            padding-top: 100%; /* 정사각형 모양 유지 */
+            position: relative;
+            height: 0; /* padding-top 사용 시 높이 0으로 설정 */
+            font-size: 1.8em; /* 폰트 크기 증가 */
+            cursor: pointer;
+            border: none;
+            border-radius: 50%; /* 원형 버튼 */
+            background-color: #add8e6; /* 연한 파랑 */
+            color: #2c3e50;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            display: flex; /* 텍스트 중앙 정렬 */
+            justify-content: center;
+            align-items: center;
+            outline: none;
+        }
+        button:hover {
+            background-color: #92c4d9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button span {
+            position: absolute; /* 중앙 정렬을 위한 텍스트 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .back-button {
+            margin-top: 30px;
+            padding: 10px 25px;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-decoration: none;
+        }
+        .back-button:hover {
+            background-color: #2c3e50;
+            transform: translateY(-2px);
+        }
+
+        /* 미디어 쿼리: 모바일 최적화 */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            #display-container {
+                max-width: 90%;
+                padding: 10px;
+            }
+            #display {
+                height: 45px;
+                font-size: 20px;
+                line-height: 45px;
+            }
+            .pad {
+                max-width: 90%;
+                gap: 10px;
+                padding: 10px;
+            }
+            button {
+                font-size: 1.5em;
+            }
+            .back-button {
+                padding: 8px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>전화번호 입력기</h1>
+    <div id="display-container">
+        <div id="display"></div>
+    </div>
+
+    <div class="pad">
+        <button onclick="press('1')"><span>1</span></button>
+        <button onclick="press('2')"><span>2</span></button>
+        <button onclick="press('3')"><span>3</span></button>
+        <button onclick="press('4')"><span>4</span></button>
+        <button onclick="press('5')"><span>5</span></button>
+        <button onclick="press('6')"><span>6</span></button>
+        <button onclick="press('7')"><span>7</span></button>
+        <button onclick="press('8')"><span>8</span></button>
+        <button onclick="press('9')"><span>9</span></button>
+        <button onclick="press('*')"><span>*</span></button>
+        <button onclick="press('0')"><span>0</span></button>
+        <button onclick="press('#')"><span>#</span></button>
+    </div>
+    <a href="index.html" class="back-button">홈으로 돌아가기</a>
+
+    <script>
+        let input = ""; // 입력된 숫자 및 특수문자 저장
+        const maxDigits = 11; // 최대 11자리 (010-1234-5678)
+
+        function press(key) {
+            // 숫자, *, # 만 허용
+            if (key.match(/[0-9*#]/)) {
+                // 숫자인 경우 최대 자릿수 제한
+                if (key.match(/[0-9]/)) {
+                    // 순수 숫자만 추출하여 길이 확인
+                    const currentDigits = input.replace(/[^0-9]/g, '');
+                    if (currentDigits.length < maxDigits) {
+                        input += key;
+                    }
+                } else { // * 또는 #은 자릿수 제한 없이 추가
+                    input += key;
+                }
+            } else if (key === 'backspace') {
+                input = input.slice(0, -1);
+            }
+
+            document.getElementById("display").textContent = format(input);
+        }
+
+        // 전화번호 형식 자동 지정
+        function format(str) {
+            let digits = str.replace(/[^0-9]/g, ''); // 숫자만 추출
+            let formatted = '';
+
+            if (digits.length > 0) {
+                // 서울 지역번호 (02) 처리
+                if (digits.startsWith('02')) {
+                    if (digits.length <= 2) {
+                        formatted = digits;
+                    } else if (digits.length <= 6) {
+                        formatted = '02-' + digits.slice(2);
+                    } else if (digits.length <= 10) { // 02-XXXX-XXXX
+                        formatted = '02-' + digits.slice(2, 6) + '-' + digits.slice(6);
+                    } else { // 02-XXXX-XXXX (10자리 초과 시 마지막 10자리만 표시)
+                         formatted = '02-' + digits.slice(2, 6) + '-' + digits.slice(6, 10);
+                    }
+                }
+                // 휴대폰 번호 또는 일반 지역 번호 (0XX) 처리
+                else if (digits.startsWith('0')) { // 010, 031, 051 등
+                    if (digits.length <= 3) { // 010, 031 등
+                        formatted = digits;
+                    } else if (digits.length <= 7) { // 010-XXXX, 031-XXXX 등
+                        formatted = digits.slice(0, 3) + '-' + digits.slice(3);
+                    } else if (digits.length <= 11) { // 010-XXXX-XXXX
+                        formatted = digits.slice(0, 3) + '-' + digits.slice(3, 7) + '-' + digits.slice(7);
+                    } else { // 11자리 초과 시 마지막 11자리만 표시
+                        formatted = digits.slice(0, 3) + '-' + digits.slice(3, 7) + '-' + digits.slice(7, 11);
+                    }
+                }
+                // 그 외 (국제번호 등 복잡한 경우는 제외하고 기본 숫자만)
+                else {
+                    formatted = digits;
+                }
+            }
+
+            // 숫자 외의 문자 (*, #)를 원래 위치에 삽입 (간단화)
+            let finalOutput = '';
+            let digitIndex = 0;
+            for (let i = 0; i < str.length; i++) {
+                if (str[i].match(/[0-9]/)) {
+                    if (digitIndex < formatted.length) {
+                        finalOutput += formatted[digitIndex];
+                        digitIndex++;
+                    }
+                } else {
+                    finalOutput += str[i];
+                }
+            }
+            return finalOutput;
+        }
+
+        // 초기 화면 설정 (옵션: 초기 메시지 등)
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById("display").textContent = "번호를 입력하세요.";
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최연서의 과제 홈페이지</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* GNB 스타일 */
+        .gnb {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .gnb nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* 반응형을 위해 추가 */
+        }
+
+        .gnb nav ul li {
+            margin: 0 20px;
+        }
+
+        .gnb nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .gnb nav ul li a:hover,
+        .gnb nav ul li a.active {
+            background-color: #34495e;
+        }
+
+        /* 초기 페이지/Site Map 스타일 */
+        .site-map {
+            padding: 40px 20px;
+            max-width: 960px;
+            margin: 30px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .site-map h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        .site-map p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .tool-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .tool-links a {
+            display: block;
+            background-color: #3498db;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .tool-links a:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+
+        /* Footer 스타일 */
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .gnb nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            .gnb nav ul li {
+                margin: 10px 0;
+            }
+            .site-map {
+                padding: 20px 15px;
+                margin: 20px auto;
+            }
+            .site-map h1 {
+                font-size: 1.8em;
+            }
+            .site-map p {
+                font-size: 1em;
+            }
+            .tool-links a {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- GNB (Global Navigation Bar) -->
+    <header class="gnb">
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">홈</a></li>
+                <li><a href="english_typewriter.html">영문 타자기</a></li>
+                <li><a href="korean_typewriter.html">한글 타자기</a></li>
+                <li><a href="calculator.html">계산기</a></li>
+                <li><a href="phone.html">전화기</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Site Map (또는 초기 페이지) -->
+    <main class="site-map">
+        <h1>환영합니다!</h1>
+        <p>
+            안녕하세요, 최연서의 HTML/CSS/JavaScript 과제 홈페이지입니다.<br>
+            이 페이지는 제가 과제로 제작한 다양한 웹 애플리케이션들을 한눈에 볼 수 있도록 구성되었습니다.
+        </p>
+        <p>아래 링크를 통해 각 기능을 직접 체험해보세요!</p>
+
+        <div class="tool-links">
+            <a href="english_typewriter.html">영문 타자기 실행</a>
+            <a href="korean_typewriter.html">한글 타자기 실행</a>
+            <a href="calculator.html">계산기 실행</a>
+            <a href="phone.html">전화기 실행</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 최연서. All Rights Reserved.</p>
+        <p>한양여자대학교 빅데이터학과</p>
+        <p>학번: 2402211</p>
+    </footer>
+</body>
+</html>
