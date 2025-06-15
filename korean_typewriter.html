@@ -46,15 +46,41 @@
             border-radius: 8px;
             box-shadow: 0 1px 5px rgba(0,0,0,0.05);
         }
+
+        /* 타자창 (displayLabel) 스타일 */
+        .label-display {
+            margin-top: 0; /* 키보드 위로 올리면서 마진 조정 */
+            margin-bottom: 30px; /* 키보드와의 간격 */
+            font-size: 2.2em;
+            border: 2px solid #007bff;
+            padding: 15px 20px;
+            width: calc(100% - 40px);
+            max-width: 600px;
+            min-height: 150px; /* 충분한 높이 확보 */
+            max-height: 250px; /* 최대 높이 설정 */
+            overflow-y: auto; /* 내용 넘치면 스크롤 */
+            display: inline-block;
+            white-space: pre-wrap; /* 줄 바꿈 허용 */
+            overflow-x: hidden; /* 가로 스크롤 방지 */
+            text-align: left;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            word-break: break-all;
+            cursor: text; /* 텍스트 입력 가능함을 시각적으로 표시 */
+            line-height: 1.6;
+        }
+
+        /* 가상 키보드 스타일 */
         .keyboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); /* 반응형 그리드 */
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); /* 키 크기 자동 조절 */
             gap: 8px;
             justify-content: center;
-            margin-top: 20px;
-            max-width: 800px; /* 최대 너비 제한 */
+            /* margin-top: 20px; */ /* 이제 displayLabel 아래에 있으므로 마진 제거 */
+            max-width: 800px; /* 키보드 최대 너비 */
             width: 100%;
-            padding: 10px;
+            padding: 15px;
             background-color: #f8f8f8;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -69,49 +95,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background-color 0.2s ease, transform 0.1s ease;
+            transition: background-color 0.15s ease, transform 0.05s ease; /* 전환 시간 증가 */
             user-select: none; /* 텍스트 선택 방지 */
-            min-width: 40px; /* 키 최소 너비 */
+            min-width: 40px; /* 최소 너비 */
+            background-color: #ecf0f1; /* 기본 키 색상 */
         }
-        .key:active {
+        .key:hover {
+            background-color: #dbe4e6;
+        }
+        .key.active {
+            background-color: #ffe082 !important; /* 활성화 시 노란색 */
             transform: translateY(1px);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
         }
-        .number { background-color: #f9c74f; } /* 노랑 */
-        .row1 { background-color: #90be6d; } /* 초록 */
-        .row2 { background-color: #577590; } /* 파랑 */
-        .row3 { background-color: #f94144; } /* 빨강 */
         .space-key {
-            grid-column: span 3; /* 스페이스바는 넓게 */
-            background-color: #be8e70; /* 갈색 */
+            grid-column: span 4; /* 스페이스바는 넓게 */
+            background-color: #bdc3c7;
         }
-        .shift-key, .mode-key {
-            grid-column: span 1; /* 쉬프트, 모드 키 */
+        .mode-toggle-key {
             background-color: #6a0572; /* 보라색 */
             color: white;
-            font-size: 0.9em;
         }
 
-        .label-display {
-            margin-top: 30px;
-            font-size: 2.2em; /* 큰 폰트 크기 */
-            border: 2px solid #007bff; /* 파란색 테두리 */
-            padding: 15px 20px;
-            width: calc(100% - 40px); /* 패딩 고려한 너비 */
-            max-width: 600px; /* 최대 너비 제한 */
-            min-height: 50px; /* 최소 높이 */
-            display: inline-block;
-            white-space: pre-wrap; /* 줄 바꿈 허용 */
-            overflow-x: auto; /* 내용이 넘치면 스크롤 */
-            text-align: left;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-            word-break: break-all; /* 긴 단어 강제 줄바꿈 */
-        }
-        .active {
-            background-color: yellow !important;
-            transition: background-color 0.1s ease;
-        }
         .back-button {
             margin-top: 30px;
             padding: 10px 25px;
@@ -136,16 +141,21 @@
             .info { padding: 10px 15px; }
             .info p { font-size: 1em; }
             .mode { font-size: 1.1em; margin-bottom: 20px; }
-            .keyboard {
-                grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
-                gap: 5px;
-                padding: 8px;
-            }
-            .key { padding: 8px 3px; font-size: 0.9em; min-width: 30px; }
             .label-display {
                 font-size: 1.5em;
                 padding: 10px 15px;
-                min-height: 40px;
+                min-height: 100px;
+                max-height: 180px;
+                margin-bottom: 20px;
+            }
+            .keyboard {
+                grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+                gap: 5px;
+                padding: 10px;
+            }
+            .key { padding: 8px 3px; font-size: 0.9em; min-width: 30px; }
+            .space-key {
+                grid-column: span 3; /* 모바일에서 스페이스바 너비 조정 */
             }
             .back-button {
                 padding: 8px 20px;
@@ -162,8 +172,13 @@
         <p>소속: 한양여자대학교 빅데이터학과</p>
     </div>
     <div class="mode" id="modeDisplay">현재 모드: 한글</div>
-    <div class="keyboard" id="keyboard"></div>
+
+    <!-- 타자창 (displayLabel)을 키보드 위로 이동 -->
     <label class="label-display" id="displayLabel"></label>
+    
+    <!-- 가상 키보드 -->
+    <div class="keyboard" id="keyboard"></div>
+
     <a href="index.html" class="back-button">홈으로 돌아가기</a>
 
     <script>
@@ -172,14 +187,17 @@
         const modeDisplay = document.getElementById('modeDisplay');
 
         let isKorean = true; // 시작 시 한글 모드
-        let composingBuffer = ''; // Hangul.js 조합을 위한 버퍼
+        let combinedText = ""; // 최종 화면에 표시될 텍스트
+        let jamoBuffer = []; // 현재 조합 중인 자모 버퍼
+        let isFirstInput = true; // 첫 입력 여부를 확인하는 플래그
 
-        // 영문 키보드 레이아웃
-        const engKeys = [
-            { chars: ['1','2','3','4','5','6','7','8','9','0','-','='], cls: 'number' },
-            { chars: ['q','w','e','r','t','y','u','i','o','p','[',']','\\'], cls: 'row1' },
-            { chars: ['a','s','d','f','g','h','j','k','l',';','\''], cls: 'row2' },
-            { chars: ['z','x','c','v','b','n','m',',','.','/'], cls: 'row3' },
+        // 영문 키보드 레이아웃 (간소화)
+        const keyLayout = [
+            ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace'],
+            ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'],
+            ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 'Enter'],
+            ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'],
+            ['한/영', ' '] // 한영 전환 키와 스페이스바
         ];
 
         // 한글 자모 매핑 (두벌식 기준)
@@ -187,213 +205,241 @@
             'q': 'ㅂ', 'w': 'ㅈ', 'e': 'ㄷ', 'r': 'ㄱ', 't': 'ㅅ', 'y': 'ㅛ', 'u': 'ㅕ', 'i': 'ㅑ', 'o': 'ㅐ', 'p': 'ㅔ',
             'a': 'ㅁ', 's': 'ㄴ', 'd': 'ㅇ', 'f': 'ㄹ', 'g': 'ㅎ', 'h': 'ㅗ', 'j': 'ㅓ', 'k': 'ㅏ', 'l': 'ㅣ',
             'z': 'ㅋ', 'x': 'ㅌ', 'c': 'ㅊ', 'v': 'ㅍ', 'b': 'ㅠ', 'n': 'ㅜ', 'm': 'ㅡ',
-            // 쉬프트 + 알파벳
+            // 쉬프트 + 알파벳 (Shift를 누른 상태의 한글 자모)
             'Q': 'ㅃ', 'W': 'ㅉ', 'E': 'ㄸ', 'R': 'ㄲ', 'T': 'ㅆ', 'O': 'ㅒ', 'P': 'ㅖ',
         };
 
-        // 특수 키 매핑
-        const specialKeys = {
-            'backspace': '← Back',
-            'enter': 'Enter',
-            'shift': 'Shift',
-            ' ': 'Space', // 스페이스바를 명시적으로 추가
-        };
-
         function renderKeyboard() {
-            keyboard.innerHTML = '';
-            const keyRows = [
-                ['1','2','3','4','5','6','7','8','9','0','-','=','backspace'],
-                ['q','w','e','r','t','y','u','i','o','p','[',']','\\'],
-                ['a','s','d','f','g','h','j','k','l',';','\'','enter'],
-                ['shift','z','x','c','v','b','n','m',',','.','/','mode-toggle'] // mode-toggle 추가
-            ];
+            keyboard.innerHTML = ''; // 기존 키보드 초기화
 
-            keyRows.forEach(rowChars => {
-                rowChars.forEach(char => {
-                    const key = document.createElement('div');
-                    key.classList.add('key');
+            keyLayout.forEach(row => {
+                row.forEach(keyChar => {
+                    const keyDiv = document.createElement('div');
+                    keyDiv.classList.add('key');
+
                     let displayChar = '';
-                    let className = '';
+                    let dataKey = keyChar.toLowerCase(); // 실제 키 이벤트의 key 값과 매칭
 
-                    // 숫자 키
-                    if ('1234567890'.includes(char)) {
-                        className = 'number';
-                        displayChar = char;
-                    }
-                    // 일반 영문/한글 키
-                    else if (engKeys.flat().map(r => r.chars).flat().includes(char)) {
-                        if (char === 'q' || char === 'w' || char === 'e' || char === 'r' || char === 't' || char === 'p' || char === 'o') {
-                            className = 'row1';
-                        } else if (char === 'a' || char === 's' || char === 'd' || char === 'f' || char === 'g' || char === 'h' || char === 'j' || char === 'k' || char === 'l') {
-                            className = 'row2';
-                        } else if (char === 'z' || char === 'x' || char === 'c' || char === 'v' || char === 'b' || char === 'n' || char === 'm') {
-                            className = 'row3';
-                        }
-                        displayChar = isKorean && korMap[char] ? korMap[char] : char;
-                    }
-                    // 스페이스바
-                    else if (char === ' ') {
-                        className = 'space-key';
+                    if (keyChar === 'Backspace') {
+                        displayChar = '← Back';
+                    } else if (keyChar === 'Enter') {
+                        displayChar = 'Enter';
+                    } else if (keyChar === ' ') {
                         displayChar = 'Space';
-                    }
-                    // 특수 키
-                    else {
-                        displayChar = specialKeys[char] || char;
-                        if (char === 'space') { className = 'space-key'; }
-                        else if (char === 'shift' || char === 'mode-toggle') { className = 'shift-key'; }
+                        keyDiv.classList.add('space-key');
+                    } else if (keyChar === '한/영') {
+                        displayChar = '한/영';
+                        keyDiv.classList.add('mode-toggle-key');
+                        dataKey = 'mode-toggle'; // 특별한 data-key 지정
+                    } else {
+                        // 한글 모드일 때 매핑된 한글 자모를 표시, 아니면 영문 소문자를 대문자로 표시
+                        if (isKorean && korMap[keyChar.toLowerCase()]) {
+                            displayChar = korMap[keyChar.toLowerCase()];
+                        } else {
+                            displayChar = keyChar.toUpperCase();
+                        }
                     }
 
-                    key.textContent = displayChar;
-                    key.classList.add(className);
+                    keyDiv.textContent = displayChar;
+                    keyDiv.dataset.key = dataKey; // 실제 키와 매칭될 값
 
-                    // 각 키에 클릭 이벤트 리스너 추가
-                    key.addEventListener('click', () => {
-                        simulateKeyPress(char);
+                    // 가상 키보드 클릭 이벤트 (실제 키보드 이벤트 시뮬레이션)
+                    keyDiv.addEventListener('click', () => {
+                        // 가상 키 클릭 시에도 시각적 피드백
+                        keyDiv.classList.add('active');
+                        setTimeout(() => keyDiv.classList.remove('active'), 150);
+
+                        // 한/영 전환 키 클릭
+                        if (keyChar === '한/영') {
+                            isKorean = !isKorean;
+                            modeDisplay.textContent = `현재 모드: ${isKorean ? '한글' : '영어'}`;
+                            renderKeyboard(); // 키보드 레이아웃 다시 그리기
+                            jamoBuffer = []; // 버퍼 초기화
+                            updateDisplay(); // 화면 업데이트
+                            return;
+                        }
+
+                        // 백스페이스 처리
+                        if (keyChar === 'Backspace') {
+                            handleBackspace();
+                            return;
+                        }
+                        // 엔터 처리
+                        if (keyChar === 'Enter') {
+                            if (jamoBuffer.length > 0) {
+                                combinedText += Hangul.a(jamoBuffer);
+                                jamoBuffer = [];
+                            }
+                            combinedText += '\n'; // 줄 바꿈
+                            updateDisplay();
+                            return;
+                        }
+                        // 스페이스바 처리
+                        if (keyChar === ' ') {
+                            if (jamoBuffer.length > 0) {
+                                combinedText += Hangul.a(jamoBuffer);
+                                jamoBuffer = [];
+                            }
+                            combinedText += ' ';
+                            updateDisplay();
+                            return;
+                        }
+
+                        // 일반 문자 입력 처리 (가상 키보드는 shiftKey 없음)
+                        processCharacterInput(keyChar.toLowerCase(), false);
                     });
 
-                    keyboard.appendChild(key);
+                    keyboard.appendChild(keyDiv);
                 });
             });
-            // 특수 키 추가 (예: 스페이스바, 백스페이스, 엔터)
-            // (이 부분은 위 renderKeyboard() 로직에 통합되었습니다)
-            // (만약 다른 레이아웃이 필요하면 이 부분을 수정하세요)
-
-            // Shift, Mode Toggle 버튼은 마지막에 추가하는 것이 좋음
-            const shiftKey = document.createElement('div');
-            shiftKey.className = 'key shift-key';
-            shiftKey.textContent = 'Shift';
-            shiftKey.addEventListener('click', () => simulateKeyPress('shift'));
-            keyboard.appendChild(shiftKey);
-
-            const spaceKey = document.createElement('div');
-            spaceKey.className = 'key space-key';
-            spaceKey.textContent = 'Space';
-            spaceKey.addEventListener('click', () => simulateKeyPress(' '));
-            keyboard.appendChild(spaceKey);
-
-            const modeToggleKey = document.createElement('div');
-            modeToggleKey.className = 'key mode-key';
-            modeToggleKey.textContent = '한/영';
-            modeToggleKey.addEventListener('click', () => {
-                isKorean = !isKorean;
-                modeDisplay.textContent = `현재 모드: ${isKorean ? '한글' : '영어'}`;
-                renderKeyboard(); // 모드 변경 시 키보드 다시 렌더링
-                composingBuffer = ''; // 버퍼 초기화
-            });
-            keyboard.appendChild(modeToggleKey);
-
-            const backspaceKey = document.createElement('div');
-            backspaceKey.className = 'key shift-key';
-            backspaceKey.textContent = '← Back';
-            backspaceKey.addEventListener('click', () => simulateKeyPress('backspace'));
-            keyboard.appendChild(backspaceKey);
-
-            const enterKey = document.createElement('div');
-            enterKey.className = 'key shift-key';
-            enterKey.textContent = 'Enter';
-            enterKey.addEventListener('click', () => simulateKeyPress('enter'));
-            keyboard.appendChild(enterKey);
         }
 
-        // 실제 키보드 입력 처리
-        document.addEventListener('keydown', (e) => {
-            const originalKey = e.key;
-            let key = originalKey.toLowerCase();
+        // 화면 업데이트 함수
+        function updateDisplay() {
+            // 현재 조합 중인 자모가 있다면, 최종 텍스트 뒤에 붙여서 임시로 표시
+            displayLabel.textContent = combinedText + (jamoBuffer.length > 0 ? Hangul.a(jamoBuffer) : '');
+            displayLabel.scrollTop = displayLabel.scrollHeight; // 스크롤 최하단 유지
+        }
 
-            // Shift 키 처리 (shiftKey 속성 사용)
-            if (e.shiftKey && korMap[originalKey.toUpperCase()]) {
-                key = originalKey.toUpperCase(); // Shift가 눌렸을 때 대문자 키 사용
+        // 백스페이스 처리 로직
+        function handleBackspace() {
+            if (jamoBuffer.length > 0) {
+                // 조합 중인 버퍼가 있다면 버퍼에서 마지막 자모 제거
+                jamoBuffer.pop();
+            } else if (combinedText.length > 0) {
+                // 버퍼가 비어있고 최종 텍스트가 있다면 마지막 글자 제거
+                // Hangul.js.d(text)는 글자를 자모로 분해, .d(text, true)는 글자 단위로 분해
+                const lastChar = combinedText.slice(-1);
+                if (Hangul.isHangul(lastChar) && Hangul.d(lastChar).length > 1) { // 완성형 한글이고 여러 자모로 구성된 경우
+                    jamoBuffer = Hangul.d(lastChar);
+                    jamoBuffer.pop(); // 마지막 자모 제거
+                    combinedText = combinedText.slice(0, -1); // 완성된 글자 제거
+                } else { // 일반 문자나 단일 자모 한글
+                    combinedText = combinedText.slice(0, -1);
+                }
+            }
+            updateDisplay();
+        }
+
+        // 문자 입력 처리 로직 (실제 키보드, 가상 키보드 공용)
+        function processCharacterInput(key, isShiftPressed) {
+            // 첫 입력 시 초기 안내 문구 제거
+            if (isFirstInput && key.length === 1 && !['backspace', 'enter', 'tab', 'shift'].includes(key)) {
+                displayLabel.textContent = ''; // 초기 문구 제거
+                combinedText = ''; // 최종 텍스트도 초기화
+                isFirstInput = false;
             }
 
-            // 키보드 시각적 활성화
-            const keys = document.querySelectorAll('.key');
-            keys.forEach(k => {
-                if (k.textContent.toLowerCase() === key || (korMap[key] && k.textContent === korMap[key])) {
-                    k.classList.add('active');
-                    setTimeout(() => k.classList.remove('active'), 100);
-                }
-            });
+            const actualKey = isShiftPressed ? key.toUpperCase() : key.toLowerCase();
 
-            simulateKeyPress(key);
+            if (!isKorean) { // 영어 모드
+                // 조합 중인 한글이 있다면 먼저 완성
+                if (jamoBuffer.length > 0) {
+                    combinedText += Hangul.a(jamoBuffer);
+                    jamoBuffer = [];
+                }
+                if (actualKey.length === 1) { // 단일 문자만 추가
+                    combinedText += actualKey;
+                }
+            } else { // 한글 모드
+                const jamo = korMap[actualKey];
+                if (jamo) { // 한글 자모에 매핑되는 경우
+                    jamoBuffer = Hangul.hangul. 조합(jamoBuffer, jamo); // Hangul.js의 조합 기능 사용
+                } else { // 한글 자모가 아닌 경우 (숫자, 영어 알파벳, 특수문자 등)
+                    // 현재 조합 중인 한글이 있다면 먼저 완성하고 현재 글자 추가
+                    if (jamoBuffer.length > 0) {
+                        combinedText += Hangul.a(jamoBuffer);
+                        jamoBuffer = []; // 버퍼 비움
+                    }
+                    if (actualKey.length === 1) { // 단일 문자만 추가 (Shift, Ctrl 등은 제외)
+                        combinedText += actualKey;
+                    }
+                }
+            }
+            updateDisplay();
+        }
+
+
+        // 실제 키보드 입력 처리 (keydown)
+        document.addEventListener('keydown', (e) => {
+            const key = e.key;
+            const code = e.code;
+
+            // IME 조합 중이거나 Ctrl/Alt/Meta 키 조합은 무시 (텍스트 입력에만 집중)
+            if (e.isComposing || e.ctrlKey || e.altKey || e.metaKey) {
+                return;
+            }
+
+            // 가상 키보드에서 해당 키 찾기 및 활성화
+            let targetKeyDiv = null;
+            if (key === 'Backspace' || key === 'Enter' || key === ' ') {
+                targetKeyDiv = keyboard.querySelector(`[data-key="${key.toLowerCase()}"]`);
+            } else if (key.length === 1) { // 알파벳, 숫자, 기호 등
+                targetKeyDiv = keyboard.querySelector(`[data-key="${key.toLowerCase()}"]`);
+            } else if (key === 'HangulMode' || key === '.') { // 한영 전환 키 ('HangulMode'는 macOS 등, '.'는 일부 Windows)
+                targetKeyDiv = keyboard.querySelector(`[data-key="mode-toggle"]`);
+            }
+
+            if (targetKeyDiv) {
+                targetKeyDiv.classList.add('active');
+            }
+
+            // 실제 입력 처리
+            if (key === 'Backspace') {
+                e.preventDefault(); // 브라우저의 뒤로가기 방지
+                handleBackspace();
+            } else if (key === 'Enter') {
+                e.preventDefault(); // 브라우저 기본 동작 방지
+                if (jamoBuffer.length > 0) {
+                    combinedText += Hangul.a(jamoBuffer);
+                    jamoBuffer = [];
+                }
+                combinedText += '\n'; // 줄 바꿈
+                updateDisplay();
+            } else if (key === 'Tab') {
+                e.preventDefault(); // 브라우저 기본 탭 이동 방지
+                if (jamoBuffer.length > 0) {
+                    combinedText += Hangul.a(jamoBuffer);
+                    jamoBuffer = [];
+                }
+                combinedText += '    '; // 탭 대신 4칸 공백
+                updateDisplay();
+            } else if (key === 'HangulMode' || key === '.') { // 한영키
+                e.preventDefault(); // 기본 동작 방지
+                isKorean = !isKorean;
+                modeDisplay.textContent = `현재 모드: ${isKorean ? '한글' : '영어'}`;
+                renderKeyboard(); // 키보드 다시 렌더링
+                jamoBuffer = []; // 버퍼 초기화
+                updateDisplay();
+            } else if (key.length === 1) { // 알파벳, 숫자, 기호 등 단일 문자
+                processCharacterInput(key, e.shiftKey);
+            }
         });
 
-        function simulateKeyPress(key) {
-            if (key === 'hangulmode' || key === '한/영') { // 한영 전환 버튼 클릭
-                isKorean = !isKorean;
-                modeDisplay.textContent = `현재 모드: ${isKorean ? '한글' : '영어'}`;
-                renderKeyboard(); // 모드 변경 시 키보드 다시 렌더링
-                composingBuffer = ''; // 버퍼 초기화
-                return;
+        // 키를 뗀 후 가상 키 비활성화 (keyup)
+        document.addEventListener('keyup', (e) => {
+            const key = e.key;
+            const code = e.code;
+
+            let targetKeyDiv = null;
+            if (key === 'Backspace' || key === 'Enter' || key === ' ') {
+                targetKeyDiv = keyboard.querySelector(`[data-key="${key.toLowerCase()}"]`);
+            } else if (key.length === 1) {
+                targetKeyDiv = keyboard.querySelector(`[data-key="${key.toLowerCase()}"]`);
+            } else if (key === 'HangulMode' || key === '.') {
+                 targetKeyDiv = keyboard.querySelector(`[data-key="mode-toggle"]`);
             }
 
-            if (key === 'backspace') {
-                if (composingBuffer.length > 0) {
-                    composingBuffer = composingBuffer.slice(0, -1); // 조합 중인 문자 버퍼에서 제거
-                } else if (displayLabel.textContent.length > 0) {
-                    // Hangul.js.disassemble()을 사용하여 마지막 글자 분해 후 제거
-                    let lastChar = displayLabel.textContent.slice(-1);
-                    let remainingText = displayLabel.textContent.slice(0, -1);
-                    if (Hangul.isComplete(lastChar)) { // 완성형 한글인 경우
-                         let disassembled = Hangul.disassemble(lastChar);
-                         if (disassembled.length > 1) { // 초성 + 중성 + 종성 중 일부만 지울 경우
-                            disassembled.pop(); // 마지막 자모 제거
-                            composingBuffer = Hangul.assemble(disassembled); // 재조합하여 버퍼에 넣음
-                            displayLabel.textContent = remainingText + composingBuffer;
-                            composingBuffer = ''; // 조합 완료 후 버퍼 비움
-                            return;
-                         }
-                    }
-                    // 일반 문자 또는 조합할 자모가 하나만 남은 경우
-                    displayLabel.textContent = remainingText;
-                }
-                return;
+            if (targetKeyDiv) {
+                targetKeyDiv.classList.remove('active');
             }
+        });
 
-            if (key === 'enter') {
-                displayLabel.textContent += '\n'; // 엔터는 줄 바꿈
-                composingBuffer = ''; // 버퍼 초기화
-                return;
-            }
-
-            if (key === 'shift') {
-                // Shift 키는 한/영 전환 로직에서 이미 처리됨 (대문자 입력)
-                // 가상 키보드에서는 Shift 키가 눌린 상태를 직접 시뮬레이션하기 어려우므로,
-                // 실제 키보드의 Shift 작동 방식에 따르도록 합니다.
-                // 여기서는 아무것도 하지 않습니다.
-                return;
-            }
-
-            // 영문 모드일 경우
-            if (!isKorean) {
-                if (key.length === 1) { // 단일 문자 (숫자, 영어 알파벳, 특수문자 등)
-                    displayLabel.textContent += key;
-                }
-            }
-            // 한글 모드일 경우
-            else {
-                // Hangul.js를 사용하여 한글 조합
-                if (korMap[key]) { // 한글 자모 매핑이 있는 경우
-                    composingBuffer += korMap[key];
-                    displayLabel.textContent = displayLabel.textContent.slice(0, -Hangul.len(composingBuffer.slice(0, -Hangul.len(korMap[key])))) + Hangul.assemble(composingBuffer);
-                } else if (key.length === 1) { // 한글 자모가 아닌 일반 문자 (숫자, 영어 등)
-                    // 현재 조합 중인 한글이 있다면 먼저 완성
-                    if (composingBuffer.length > 0) {
-                        displayLabel.textContent += Hangul.assemble(composingBuffer);
-                        composingBuffer = ''; // 버퍼 비움
-                    }
-                    displayLabel.textContent += key;
-                }
-            }
-        }
-
-        // 초기 키보드 렌더링
+        // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', () => {
             renderKeyboard();
-            modeDisplay.textContent = `현재 모드: ${isKorean ? '한글' : '영어'}`; // 초기 모드 설정
+            displayLabel.textContent = "여기에 한글 또는 영어를 입력하세요. '한/영' 버튼 또는 '.' 키로 모드를 전환합니다.";
         });
-
-        // 사용자 편의를 위한 초기 안내
-        // displayLabel.textContent = "여기에 한글 또는 영어를 입력하세요. '한/영' 버튼 또는 '.' 키로 모드를 전환합니다.";
     </script>
 </body>
 </html>
